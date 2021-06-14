@@ -21,6 +21,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.avast.server'
+version = version ? version.replaceFirst('refs/tags/', '').replaceFirst('v', '') : version
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
