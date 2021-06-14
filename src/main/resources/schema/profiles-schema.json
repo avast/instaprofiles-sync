@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://xyzid.avast.com/object1619081476.json",
+  "title": "Root",
+  "type": "object",
+  "required": [
+    "profiles"
+  ],
+  "properties": {
+    "profiles": {
+      "$id": "#root/profiles",
+      "title": "Profiles",
+      "type": "array",
+      "description": "Contains list of Cloud profiles",
+      "default": [],
+      "items":{
+        "$id": "#root/profiles/items",
+        "title": "Items",
+        "type": "object",
+        "required": [
+          "profileName",
+          "description",
+          "projectId",
+          "vCenterAccount",
+          "imageConfigJson"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "profileName": {
+            "$id": "#root/profiles/items/profileName",
+            "title": "Profilename",
+            "type": "string",
+            "minLength": 1,
+            "default": ""
+          },
+          "description": {
+            "$id": "#root/profiles/items/description",
+            "title": "Description",
+            "type": "string",
+            "default": ""
+          },
+          "projectId": {
+            "$id": "#root/profiles/items/projectId",
+            "title": "Projectid",
+            "description": "TeamCity project Id",
+            "$ref": "#/definitions/id",
+            "default": ""
+          },
+          "enabled": {
+            "$id": "#root/profiles/items/enabled",
+            "title": "Enabled status",
+            "description": "Enabled status",
+            "type": "boolean",
+            "default": true
+          },
+          "vCenterAccount": {
+            "$id": "#root/profiles/items/vCenterAccount",
+            "title": "VCenter Account",
+            "description": "VMWare vCenter account defined in the InstantProfiles Sync app",
+            "$ref": "#/definitions/id",
+            "default": ""
+          },
+          "terminateConditions": {
+            "$id": "#root/profiles/items/terminateConditions",
+            "title": "TerminateConditions",
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": false,
+            "properties": {
+              "totalWorkTime": {
+                "$id": "#root/profiles/items/terminateConditions/totalWorkTime",
+                "title": "Total Work Time",
+                "type": "integer",
+                "description": "After certain work time X (minutes)",
+                "default": "",
+                "minimum": 1
+              },
+              "nextHour": {
+                "$id": "#root/profiles/items/terminateConditions/nextHour",
+                "title": "Next hour",
+                "type": "integer",
+                "description": "If idle, stop X minutes before the full hour",
+                "default": "",
+                "minimum": 1
+              },
+              "terminateAfterBuild": {
+                "$id": "#root/profiles/items/terminateConditions/terminateAfterBuild",
+                "title": "Terminate After Build",
+                "type": "boolean",
+                "default": "true",
+                "description": "After the first build"
+              }
+            }
+          },
+          "imageConfigJson": {
+            "$id": "#root/profiles/items/imageConfigJson",
+            "title": "Imageconfigjson",
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": false,
+            "patternProperties": {
+              "^.*$": {
+                "$id": "#root/profiles/items/imageConfigJson/image-name",
+                "title": "Image-name",
+                "type": "object",
+                "required": [
+                  "template",
+                  "instanceFolder",
+                  "maxInstances"
+                ],
+                "properties": {
+                  "template": {
+                    "$id": "#root/profiles/items/imageConfigJson/image-name/template",
+                    "title": "Template",
+                    "type": "string",
+                    "description": "Specifies the path to the virtual machine to clone.\nOn vSphere, this path always starts with the name of the datacenter, followed by \"vm\".",
+                    "default": "",
+                    "pattern": "^(.+)?/vm/.+$"
+                  },
+                  "instanceFolder": {
+                    "$id": "#root/profiles/items/imageConfigJson/image-name/instanceFolder",
+                    "title": "Instancefolder",
+                    "type": "string",
+                    "description": "Specifies the vSphere folder in which cloned machines should\nbe placed. This can be the folder your template resides in.\nThe name of the image is used as a base for the names of the cloned images",
+                    "default": ""
+                  },
+                  "agentPool": {
+                    "$id": "#root/profiles/items/imageConfigJson/image-name/agentPool",
+                    "title": "Agentpool",
+                    "type": ["string", "integer"],
+                    "default": "",
+                    "description": "If `agentPool` is unspecified, the image will be assigned to the default pool.\nYou can set an explicit pool by specifying either the pool's name or its\nnumeric identifier."
+                  },
+                  "resourcePool": {
+                    "$id": "#root/profiles/items/imageConfigJson/image-name/resourcePool",
+                    "title": "Resourcepool",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "maxInstances": {
+                    "$id": "#root/profiles/items/imageConfigJson/image-name/maxInstances",
+                    "title": "Max Instances",
+                    "type": "integer",
+                    "description": "The plugin will not allow more than `maxInstances` instances to run simultaneously.",
+                    "minimum": 1,
+                    "default": 50
+                  },
+                  "shutdownTimeout": {
+                    "$id": "#root/profiles/items/imageConfigJson/image-name/maxInstances",
+                    "title": "ShutDown Timeout",
+                    "description": "Minutes to wait before stopping idle build agent. Leave empty to have no timeout. Default value is 30 minutes",
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 30
+                  },
+                  "network": {
+                    "$id": "#root/profiles/items/imageConfigJson/image-name/network",
+                    "description": "Optionally, you can set the network to which the cloned machine's ethernet card should\nbe connected. If your image contains multiple network cards, set this field to an\narray of network names.",
+                    "title": "Network",
+                    "type": ["array", "string"],
+                    "minItems": 0,
+                    "default": []
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "definitions": {
+    "id": {
+      "$id": "identifier",
+      "type": "string",
+      "description": "",
+      "default": "",
+      "pattern": "^[_a-zA-Z][a-zA-Z0-9-_]+$"
+    }
+  }
+}

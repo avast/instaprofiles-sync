@@ -1,0 +1,101 @@
+buildscript {
+    ext {
+        springBootVersion = '2.4.5'
+        avastPluginsVersion = '0.35.18'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.32"
+    }
+}
+
+apply plugin: 'idea'
+apply plugin: 'application'
+apply plugin: 'kotlin'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.avast.server'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    baseDockerImageVersion = "0.2.32"
+    mybatisVersion = "3.5.6"
+    mybatisSpringVersion = "2.0.5"
+    springVaultVersion = "3.0.0"
+//    set('springCloudVersion', "Greenwich.SR3")
+}
+
+bootJar {
+    enabled = true
+}
+
+dependencies {
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+//    developmentOnly("io.projectreactor:reactor-tools")
+
+//    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile('org.springframework.boot:spring-boot-starter-webflux')
+
+
+    compile("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
+
+
+    compile "org.kohsuke:github-api:1.116"
+    compile "com.squareup.okhttp3:okhttp:4.8.1"
+
+    compile 'commons-codec:commons-codec:1.15'
+
+    compile("com.networknt:json-schema-validator:1.0.52") {
+        exclude group: 'org.jruby.joni'
+    }
+
+
+//    compileOnly('org.projectlombok:lombok')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation("org.junit.vintage:junit-vintage-engine") {
+        exclude group: "org.hamcrest", module: "hamcrest-core"
+    }
+    testImplementation('io.projectreactor:reactor-test')
+}
+
+//publishing {
+//    publications {
+//        maven(MavenPublication) {
+//            artifact bootJar
+//            artifact sourceJar {
+//                classifier "sources"
+//            }
+//        }
+//    }
+//}
+
+
+configurations {
+    [apiElements, runtimeElements].each {
+        it.outgoing.artifacts.removeIf {
+            it.buildDependencies.getDependencies(null).contains(jar)
+        }
+        it.outgoing.artifact(bootJar)
+    }
+}
+
+//jar {
+//    enabled = true
+//}

@@ -1,0 +1,18 @@
+---
+- profileName: xxx
+  description: asdasd
+  projectId: aasdasd
+  vCenterAccount: xyz
+  imageConfigJson:
+    "asdasdasd":
+        template: ""
+        instanceFolder: ""
+        resourcePool: ""
+        maxInstances: 10
+        agentPool: "10"
+        network:
+          - "aaaaaa"
+        shutdownTimeout: 30
+
+
+

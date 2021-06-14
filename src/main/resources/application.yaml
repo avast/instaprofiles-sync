@@ -1,0 +1,5 @@
+spring.main.web-application-type: none
+logging.file.name: logs/app.log
+
+app:
+  schemaFile: "classpath:/schema/profiles-schema.json"
