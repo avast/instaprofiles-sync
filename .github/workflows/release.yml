@@ -52,14 +52,20 @@ jobs:
             [CHANGELOG.md](CHANGELOG.md)
           draft: true
           prerelease: false
+      - name: Get Name of Artifact
+        run: |
+          ARTIFACT_PATHNAME=$(ls build/libs/*.jar | head -n 1)
+          ARTIFACT_NAME=$(basename $ARTIFACT_PATHNAME)
+          echo ::set-env name=ARTIFACT_NAME::${ARTIFACT_NAME}
+          echo ::set-env name=ARTIFACT_PATHNAME::${ARTIFACT_PATHNAME}
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/libs/instaprofiles-sync*.jar
-          asset_name: instaprofiles-sync.jar
+          asset_path: ${{ env.ARTIFACT_PATHNAME }}
+          asset_name: ${{ env.ARTIFACT_NAME }}
           asset_content_type: application/java-archive
       - name: Publish release
         uses: StuYarrow/publish-release@v1
