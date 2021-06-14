@@ -53,19 +53,20 @@ jobs:
           draft: true
           prerelease: false
       - name: Get Name of Artifact
+        id: artifactnamestep
         run: |
           ARTIFACT_PATHNAME=$(ls ./build/libs/*.jar | head -n 1)
           ARTIFACT_NAME=$(basename $ARTIFACT_PATHNAME)
-          echo ::set-env name=ARTIFACT_NAME::${ARTIFACT_NAME}
-          echo ::set-env name=ARTIFACT_PATHNAME::${ARTIFACT_PATHNAME}
+          echo ::set-output name=artifact_name::${ARTIFACT_NAME}
+          echo ::set-output name=artifact_pathname::${ARTIFACT_PATHNAME}
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.ARTIFACT_PATHNAME }}
-          asset_name: ${{ env.ARTIFACT_NAME }}
+          asset_path: ${{ steps.artifactnamestep.outputs.artifact_pathname }}
+          asset_name: ${{ steps.artifactnamestep.outputs.artifact_name }}
           asset_content_type: application/java-archive
       - name: Publish release
         uses: StuYarrow/publish-release@v1
